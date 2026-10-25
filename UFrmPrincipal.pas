@@ -37,7 +37,9 @@ uses
   UFrmComparador,
   UFrmNutricional,
   UFrmSobreNovidades,
-  UFrmEditorEtiquetas;
+  UFrmEditorEtiquetas,
+  UFrmCadastroProdutos,
+  UFrmRelatoriosGestao;
 
 type
   TFrmPrincipal = class(TForm)
@@ -65,12 +67,14 @@ type
     lblCardUltimaSyncTit: TLabel;
     lblCardUltimaSyncVal: TLabel;
     pnlControles: TPanel;
+    btnCadastroProdutos: TButton;
     btnCargaAlterados: TButton;
-    btnCompararAlteracoes: TButton;
     btnCargaTotal: TButton;
-    btnEditorEtiquetas: TButton;
-    btnIniciarPausar: TButton;
+    btnCompararAlteracoes: TButton;
     btnTestarConexoes: TButton;
+    btnEditorEtiquetas: TButton;
+    btnRelatoriosGestao: TButton;
+    btnIniciarPausar: TButton;
     btnValidarPLUs: TButton;
     pnlCentral: TPanel;
     grpBalancas: TGroupBox;
@@ -126,6 +130,8 @@ type
     procedure mnPropriedadesBalancaClick(Sender: TObject);
     procedure btnCompararAlteracoesClick(Sender: TObject);
     procedure btnEditorEtiquetasClick(Sender: TObject);
+    procedure btnCadastroProdutosClick(Sender: TObject);
+    procedure btnRelatoriosGestaoClick(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure mnAbrirClick(Sender: TObject);
     procedure mnSairClick(Sender: TObject);
@@ -1094,6 +1100,11 @@ begin
       Key := 0;
       lblBadgeBuildClick(Self);
     end;
+    VK_F2:
+    begin
+      Key := 0;
+      btnCadastroProdutosClick(Self);
+    end;
     VK_F5:
     begin
       Key := 0;
@@ -1118,6 +1129,11 @@ begin
     begin
       Key := 0;
       btnEditorEtiquetasClick(Self);
+    end;
+    VK_F10:
+    begin
+      Key := 0;
+      btnRelatoriosGestaoClick(Self);
     end;
     VK_F12:
     begin
@@ -1426,6 +1442,30 @@ var
   Frm: TFrmEditorEtiquetas;
 begin
   Frm := TFrmEditorEtiquetas.Create(Self);
+  try
+    Frm.ShowModal;
+  finally
+    Frm.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.btnCadastroProdutosClick(Sender: TObject);
+var
+  Frm: TFrmCadastroProdutos;
+begin
+  Frm := TFrmCadastroProdutos.Create(Self);
+  try
+    Frm.ShowModal;
+  finally
+    Frm.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.btnRelatoriosGestaoClick(Sender: TObject);
+var
+  Frm: TFrmRelatoriosGestao;
+begin
+  Frm := TFrmRelatoriosGestao.Create(Self);
   try
     Frm.ShowModal;
   finally

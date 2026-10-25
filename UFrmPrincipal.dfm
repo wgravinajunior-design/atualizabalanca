@@ -3,7 +3,7 @@
   Top = 0
   Caption = 'GoUp Sistemas - AtualizaBalan'#231'a Enterprise'
   ClientHeight = 650
-  ClientWidth = 960
+  ClientWidth = 1080
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -55,7 +55,7 @@
       ParentFont = False
     end
     object pnlStatusTopo: TPanel
-      Left = 380
+      Left = 490
       Top = 14
       Width = 180
       Height = 38
@@ -91,7 +91,7 @@
       end
     end
     object btnConectarBanco: TButton
-      Left = 570
+      Left = 680
       Top = 14
       Width = 115
       Height = 38
@@ -100,7 +100,7 @@
       OnClick = btnConectarBancoClick
     end
     object btnConfiguracoes: TButton
-      Left = 695
+      Left = 805
       Top = 14
       Width = 115
       Height = 38
@@ -109,9 +109,9 @@
       OnClick = btnConfiguracoesClick
     end
     object pnlBadgeBuild: TPanel
-      Left = 825
+      Left = 930
       Top = 15
-      Width = 115
+      Width = 135
       Height = 36
       BevelOuter = bvNone
       Color = 2758415
@@ -124,12 +124,12 @@
       object lblBadgeBuild: TLabel
         Left = 0
         Top = 0
-        Width = 115
+        Width = 135
         Height = 36
         Align = alClient
         Alignment = taCenter
         Layout = tlCenter
-        Caption = '⚡ Build 1.0.2'
+        Caption = '⚡ Build 1.0.3'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 6210850
         Font.Height = -13
@@ -301,15 +301,33 @@
   object pnlControles: TPanel
     Left = 0
     Top = 150
-    Width = 960
+    Width = 1080
     Height = 50
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    object btnCargaAlterados: TButton
+    object btnCadastroProdutos: TButton
       Left = 10
       Top = 9
-      Width = 125
+      Width = 112
+      Height = 32
+      Hint = 'Abre o cadastro completo de produtos, departamentos e tabela nutricional RDC 429 (Atalho: F2)'
+      Caption = 'Produtos (F2)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnClick = btnCadastroProdutosClick
+    end
+    object btnCargaAlterados: TButton
+      Left = 127
+      Top = 9
+      Width = 115
       Height = 32
       Hint = 
         'Envia imediatamente os produtos que tiveram pre'#231'o ou dados alter' +
@@ -323,33 +341,13 @@
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnCargaAlteradosClick
     end
-    object btnCompararAlteracoes: TButton
-      Left = 140
-      Top = 9
-      Width = 130
-      Height = 32
-      Hint = 
-        'Exibe o comparativo de pre'#231'os anteriores x atuais e produtos pen' +
-        'dentes de preenchimento de c'#243'digo (Atalho: F7)'
-      Caption = 'Ver Altera'#231#245'es (F7)'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 1
-      OnClick = btnCompararAlteracoesClick
-    end
     object btnCargaTotal: TButton
-      Left = 275
+      Left = 247
       Top = 9
-      Width = 115
+      Width = 105
       Height = 32
       Hint = 
         'Transmite o cadastro completo de produtos para todas as balan'#231'as' +
@@ -360,10 +358,38 @@
       TabOrder = 2
       OnClick = btnCargaTotalClick
     end
-    object btnEditorEtiquetas: TButton
-      Left = 395
+    object btnCompararAlteracoes: TButton
+      Left = 357
       Top = 9
-      Width = 135
+      Width = 120
+      Height = 32
+      Hint = 
+        'Exibe o comparativo de pre'#231'os anteriores x atuais e produtos pen' +
+        'dentes de preenchimento de c'#243'digo (Atalho: F7)'
+      Caption = 'Ver Altera'#231#245'es (F7)'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+      OnClick = btnCompararAlteracoesClick
+    end
+    object btnTestarConexoes: TButton
+      Left = 482
+      Top = 9
+      Width = 120
+      Height = 32
+      Hint = 
+        'Verifica a comunica'#231#227'o de rede com cada uma das balan'#231'as cadastr' +
+        'adas (Atalho: F8)'
+      Caption = 'Testar Balan'#231'as (F8)'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+      OnClick = btnTestarConexoesClick
+    end
+    object btnEditorEtiquetas: TButton
+      Left = 607
+      Top = 9
+      Width = 105
       Height = 32
       Hint = 
         'Abre o editor visual de etiquetas para personalizar e enviar lay' +
@@ -377,49 +403,53 @@
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 5
       OnClick = btnEditorEtiquetasClick
     end
-    object btnTestarConexoes: TButton
-      Left = 535
+    object btnRelatoriosGestao: TButton
+      Left = 717
       Top = 9
-      Width = 125
+      Width = 115
       Height = 32
-      Hint = 
-        'Verifica a comunica'#231#227'o de rede com cada uma das balan'#231'as cadastr' +
-        'adas (Atalho: F8)'
-      Caption = 'Testar Balan'#231'as (F8)'
+      Hint = 'Emite relat'#243'rios gerenciais de vendas por peso, pre'#231'o, transa'#231#245'es e etiquetas (Atalho: F10)'
+      Caption = 'Relat'#243'rios (F10)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
-      OnClick = btnTestarConexoesClick
+      TabOrder = 6
+      OnClick = btnRelatoriosGestaoClick
     end
     object btnIniciarPausar: TButton
-      Left = 665
+      Left = 837
       Top = 9
-      Width = 145
+      Width = 120
       Height = 32
       Hint = 
         'Pausa ou retoma o ciclo autom'#225'tico de sincroniza'#231#227'o em segundo p' +
         'lano'
-      Caption = 'Pausar Monitoramento'
+      Caption = 'Pausar Monitor'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 5
+      TabOrder = 7
       OnClick = btnIniciarPausarClick
     end
     object btnValidarPLUs: TButton
-      Left = 815
+      Left = 962
       Top = 9
-      Width = 130
+      Width = 108
       Height = 32
       Hint = 
         'Executa diagn'#243'stico de integridade dos c'#243'digos, pre'#231'os e validad' +
         'es no banco'
-      Caption = 'Diagn'#243'stico de PLUs'
+      Caption = 'Diagn'#243'stico PLUs'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 6
+      TabOrder = 8
       OnClick = btnValidarPLUsClick
     end
   end

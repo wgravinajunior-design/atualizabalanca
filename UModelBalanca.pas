@@ -13,8 +13,8 @@ uses
   System.Generics.Collections;
 
 const
-  VERSAO_SISTEMA = 'v1.0.2';
-  NUMERO_BUILD = '1.0.2';
+  VERSAO_SISTEMA = 'v1.0.3';
+  NUMERO_BUILD = '1.0.3';
   NOME_APLICACAO = 'GoUp Sistemas - AtualizaBalança Enterprise';
 
 type
@@ -216,6 +216,50 @@ type
     property ImprimirReceitaAlergicos: Boolean read FImprimirReceitaAlergicos write FImprimirReceitaAlergicos;
     property ImprimirRodape: Boolean read FImprimirRodape write FImprimirRodape;
     property TipoCodigoBarras: Integer read FTipoCodigoBarras write FTipoCodigoBarras;
+  end;
+
+  { Departamento / Setor da Loja }
+  TDepartamento = class
+  private
+    FID: Integer;
+    FCodigo: Integer;
+    FNome: string;
+    FAtivo: Boolean;
+  public
+    constructor Create(const AID, ACodigo: Integer; const ANome: string);
+    property ID: Integer read FID write FID;
+    property Codigo: Integer read FCodigo write FCodigo;
+    property Nome: string read FNome write FNome;
+    property Ativo: Boolean read FAtivo write FAtivo;
+  end;
+
+  { Registro de Movimento e Desempenho de Pesagem / Venda }
+  TRegistroVendaPesagem = class
+  private
+    FDataHora: TDateTime;
+    FCodigoPLU: Integer;
+    FDescricao: string;
+    FSetor: Integer;
+    FNomeSetor: string;
+    FPesoKg: Double;
+    FPrecoKg: Currency;
+    FValorTotal: Currency;
+    FQtdEtiquetas: Integer;
+    FBalancaID: Integer;
+    FNomeBalanca: string;
+  public
+    constructor Create;
+    property DataHora: TDateTime read FDataHora write FDataHora;
+    property CodigoPLU: Integer read FCodigoPLU write FCodigoPLU;
+    property Descricao: string read FDescricao write FDescricao;
+    property Setor: Integer read FSetor write FSetor;
+    property NomeSetor: string read FNomeSetor write FNomeSetor;
+    property PesoKg: Double read FPesoKg write FPesoKg;
+    property PrecoKg: Currency read FPrecoKg write FPrecoKg;
+    property ValorTotal: Currency read FValorTotal write FValorTotal;
+    property QtdEtiquetas: Integer read FQtdEtiquetas write FQtdEtiquetas;
+    property BalancaID: Integer read FBalancaID write FBalancaID;
+    property NomeBalanca: string read FNomeBalanca write FNomeBalanca;
   end;
 
   { Registro de Retorno da Operação de Envio }
@@ -459,6 +503,35 @@ begin
   FImprimirReceitaAlergicos := True;
   FImprimirRodape := True;
   FTipoCodigoBarras := 0;
+end;
+
+{ TDepartamento }
+
+constructor TDepartamento.Create(const AID, ACodigo: Integer; const ANome: string);
+begin
+  inherited Create;
+  FID := AID;
+  FCodigo := ACodigo;
+  FNome := ANome;
+  FAtivo := True;
+end;
+
+{ TRegistroVendaPesagem }
+
+constructor TRegistroVendaPesagem.Create;
+begin
+  inherited Create;
+  FDataHora := Now;
+  FCodigoPLU := 0;
+  FDescricao := '';
+  FSetor := 0;
+  FNomeSetor := '';
+  FPesoKg := 0.0;
+  FPrecoKg := 0.0;
+  FValorTotal := 0.0;
+  FQtdEtiquetas := 1;
+  FBalancaID := 0;
+  FNomeBalanca := '';
 end;
 
 end.
