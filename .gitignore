@@ -1,0 +1,19 @@
+# Delphi Compiler Intermediates
+*.dcu
+*.~*
+*.identcache
+*.stat
+*.local
+*.drc
+*.map
+
+# IDE History & Cache
+__history/
+__recovery/
+Cache/
+Logs/
+Win32/
+Win64/
+
+# Temporary Scripts
+apply_bom.ps1
