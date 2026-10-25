@@ -29,8 +29,16 @@
     ParentBackground = False
     TabOrder = 0
     ExplicitWidth = 960
+    object imgLogoApp: TImage
+      Left = 14
+      Top = 10
+      Width = 46
+      Height = 46
+      Proportional = True
+      Stretch = True
+    end
     object lblTitulo: TLabel
-      Left = 20
+      Left = 68
       Top = 10
       Width = 354
       Height = 21
@@ -43,7 +51,7 @@
       ParentFont = False
     end
     object lblSubtitulo: TLabel
-      Left = 20
+      Left = 68
       Top = 36
       Width = 107
       Height = 15

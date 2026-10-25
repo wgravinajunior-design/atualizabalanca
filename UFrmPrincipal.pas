@@ -18,6 +18,7 @@ uses
   System.Generics.Collections,
   System.Threading,
   Vcl.Graphics,
+  Vcl.Imaging.pngimage,
   Vcl.Controls,
   Vcl.Forms,
   Vcl.Dialogs,
@@ -44,6 +45,7 @@ uses
 type
   TFrmPrincipal = class(TForm)
     pnlTopo: TPanel;
+    imgLogoApp: TImage;
     lblTitulo: TLabel;
     lblSubtitulo: TLabel;
     pnlStatusTopo: TPanel;
@@ -148,6 +150,7 @@ type
     procedure PararMonitoramento;
     procedure IniciarServidorRest;
     procedure PararServidorRest;
+    procedure CarregarIconesAplicacao;
 
     procedure AtualizarGridBalancas;
     procedure AtualizarStatusConexaoUI;
@@ -174,6 +177,43 @@ implementation
 
 {$R *.dfm}
 
+procedure TFrmPrincipal.CarregarIconesAplicacao;
+var
+  CaminhoIco, CaminhoPng: string;
+begin
+  CaminhoIco := ExtractFilePath(ParamStr(0)) + 'app_icon.ico';
+  CaminhoPng := ExtractFilePath(ParamStr(0)) + 'app_icon.png';
+
+  { 1. Ícone da Janela (Canto Superior Esquerdo) e Bandeja do Sistema (Tray) }
+  try
+    if FileExists(CaminhoIco) then
+    begin
+      Application.Icon.LoadFromFile(CaminhoIco);
+      Self.Icon.LoadFromFile(CaminhoIco);
+      TrayIcon.Icon.LoadFromFile(CaminhoIco);
+    end
+    else if Application.Icon.Handle <> 0 then
+    begin
+      Self.Icon.Assign(Application.Icon);
+      TrayIcon.Icon.Assign(Application.Icon);
+    end;
+  except
+  end;
+
+  TrayIcon.Visible := True;
+
+  { 2. Ícone / Logo no canto superior esquerdo do cabeçalho da janela }
+  try
+    if FileExists(CaminhoPng) then
+      imgLogoApp.Picture.LoadFromFile(CaminhoPng)
+    else if FileExists(CaminhoIco) then
+      imgLogoApp.Picture.Icon.LoadFromFile(CaminhoIco)
+    else if Self.Icon.Handle <> 0 then
+      imgLogoApp.Picture.Icon.Assign(Self.Icon);
+  except
+  end;
+end;
+
 procedure TFrmPrincipal.FormCreate(Sender: TObject);
 var
   I: Integer;
@@ -187,6 +227,7 @@ begin
   FHistoricoLogs := TStringList.Create;
   FTotalItensHoje := 0;
   lblBadgeBuild.Caption := '⚡ Build ' + NUMERO_BUILD;
+  CarregarIconesAplicacao;
 
   ParamMinimizado := False;
   for I := 1 to ParamCount do
