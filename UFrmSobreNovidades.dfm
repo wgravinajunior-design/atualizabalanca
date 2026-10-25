@@ -1,9 +1,11 @@
 ﻿object FrmSobreNovidades: TFrmSobreNovidades
   Left = 0
   Top = 0
-  Caption = 'Sobre o Sistema e Atualiza'#231#245'es'
-  ClientHeight = 560
-  ClientWidth = 700
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'GoUp Sistemas - Novidades da Build e Atualiza'#231#245'es'
+  ClientHeight = 620
+  ClientWidth = 760
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,16 +20,16 @@
   object pnlTopo: TPanel
     Left = 0
     Top = 0
-    Width = 700
+    Width = 760
     Height = 80
     Align = alTop
     BevelOuter = bvNone
-    Color = 5384214
+    Color = 2758415
     ParentBackground = False
     TabOrder = 0
     object lblTitulo: TLabel
       Left = 20
-      Top = 12
+      Top = 15
       Width = 354
       Height = 21
       Caption = 'GoUp Sistemas - Atualizador de dados Balan'#231'a'
@@ -38,78 +40,101 @@
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object lblVersao: TLabel
+    object lblSubtitulo: TLabel
       Left = 20
-      Top = 38
-      Width = 277
+      Top = 40
+      Width = 368
       Height = 15
-      Caption = 'Vers'#227'o 2.5.0 Enterprise - Build Oficial (Outubro/2026)'
+      Caption = 'Central de Novidades da Build & Sistema de Atualiza'#231#227'o Autom'#225'tica'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGainsboro
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object pnlBadgeVersao: TPanel
+      Left = 600
+      Top = 15
+      Width = 140
+      Height = 48
+      BevelOuter = bvNone
+      Color = 3815994
+      ParentBackground = False
+      TabOrder = 0
+      object lblVersaoTit: TLabel
+        Left = 0
+        Top = 6
+        Width = 140
+        Height = 13
+        Align = alTop
+        Alignment = taCenter
+        Caption = 'BUILD INSTALADA'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clSilver
+        Font.Height = -10
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblVersaoVal: TLabel
+        Left = 0
+        Top = 21
+        Width = 140
+        Height = 21
+        Align = alBottom
+        Alignment = taCenter
+        Caption = 'v1.0.0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 6210850
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+    end
+  end
+  object pnlCardUpdate: TPanel
+    Left = 15
+    Top = 90
+    Width = 730
+    Height = 70
+    BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
+    TabOrder = 1
+    object lblUpdateStatusTit: TLabel
+      Left = 15
+      Top = 12
+      Width = 138
+      Height = 13
+      Caption = 'STATUS DA ATUALIZA'#199#195'O'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGray
+      Font.Height = -10
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object lblUpdateStatusMsg: TLabel
+      Left = 15
+      Top = 32
+      Width = 410
+      Height = 15
+      Caption = 'Sistema rodando na vers'#227'o 1.0.0. Clique para checar atualiza'#231#245'es no GitHub.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 2105376
       Font.Height = -12
       Font.Name = 'Segoe UI'
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object lblStatusUpdate: TLabel
-      Left = 20
-      Top = 56
-      Width = 345
-      Height = 13
-      Caption = 'Comunica'#231#227'o Direta via Rede | Sockets TCP Nativos | Padr'#227'o RDC 429'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 14474460
-      Font.Height = -11
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-    end
-  end
-  object grpNovidades: TGroupBox
-    Left = 15
-    Top = 90
-    Width = 670
-    Height = 410
-    Caption = ' O que h'#225' de novo nesta vers'#227'o '
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
-    Font.Style = [fsBold]
-    ParentFont = False
-    TabOrder = 1
-    object mmoNovidades: TMemo
-      Left = 15
-      Top = 25
-      Width = 640
-      Height = 370
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = 2105376
-      Font.Height = -12
-      Font.Name = 'Consolas'
-      Font.Style = []
-      ParentFont = False
-      ReadOnly = True
-      ScrollBars = ssVertical
-      TabOrder = 0
-    end
-  end
-  object pnlRodape: TPanel
-    Left = 0
-    Top = 505
-    Width = 700
-    Height = 55
-    Align = alBottom
-    BevelOuter = bvNone
-    Color = 15921906
-    ParentBackground = False
-    TabOrder = 2
     object btnVerificarAtualizacao: TButton
-      Left = 15
-      Top = 10
-      Width = 260
-      Height = 35
-      Caption = 'Verificar Atualiza'#231#245'es no GitHub'
+      Left = 440
+      Top = 18
+      Width = 140
+      Height = 34
+      Caption = 'Verificar no GitHub'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12
@@ -119,22 +144,104 @@
       TabOrder = 0
       OnClick = btnVerificarAtualizacaoClick
     end
-    object btnVerRepositorio: TButton
-      Left = 285
-      Top = 10
-      Width = 190
-      Height = 35
-      Caption = 'Abrir Reposit'#243'rio GitHub'
+    object btnBaixarAtualizacao: TButton
+      Left = 590
+      Top = 18
+      Width = 125
+      Height = 34
+      Caption = 'Baixar Nova Vers'#227'o'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGreen
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
       TabOrder = 1
+      Visible = False
+      OnClick = btnBaixarAtualizacaoClick
+    end
+  end
+  object pcNovidades: TPageControl
+    Left = 15
+    Top = 170
+    Width = 730
+    Height = 385
+    ActivePage = tsResumoVisual
+    TabOrder = 2
+    object tsResumoVisual: TTabSheet
+      Caption = ' O Que Foi Feito Nesta Build '
+      object lvNovidades: TListView
+        Left = 0
+        Top = 0
+        Width = 722
+        Height = 355
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Recurso / M'#243'dulo Implementado'
+            Width = 260
+          end
+          item
+            Caption = 'Categoria'
+            Width = 110
+          end
+          item
+            Caption = 'Impacto e Benef'#237'cio Direto no Operador / Loja'
+            Width = 330
+          end>
+        GridLines = True
+        ReadOnly = True
+        RowSelect = True
+        ViewStyle = vsReport
+      end
+    end
+    object tsNotasDetalhadas: TTabSheet
+      Caption = ' Notas T'#233'cnicas Completas '
+      ImageIndex = 1
+      object mmoNovidades: TMemo
+        Left = 0
+        Top = 0
+        Width = 722
+        Height = 355
+        Align = alClient
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 2105376
+        Font.Height = -12
+        Font.Name = 'Consolas'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+    end
+  end
+  object pnlRodape: TPanel
+    Left = 0
+    Top = 565
+    Width = 760
+    Height = 55
+    Align = alBottom
+    BevelOuter = bvNone
+    Color = 15921906
+    ParentBackground = False
+    TabOrder = 3
+    object btnVerRepositorio: TButton
+      Left = 15
+      Top = 10
+      Width = 200
+      Height = 35
+      Caption = 'Ver Reposit'#243'rio no GitHub'
+      TabOrder = 0
       OnClick = btnVerRepositorioClick
     end
     object btnFechar: TButton
-      Left = 590
+      Left = 645
       Top = 10
-      Width = 95
+      Width = 100
       Height = 35
       Caption = 'Fechar'
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btnFecharClick
     end
   end

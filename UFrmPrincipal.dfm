@@ -108,14 +108,39 @@
       TabOrder = 2
       OnClick = btnConfiguracoesClick
     end
-    object btnSobre: TButton
-      Left = 820
-      Top = 14
-      Width = 125
-      Height = 38
-      Caption = 'Sobre & Updates (F1)'
+    object pnlBadgeBuild: TPanel
+      Left = 825
+      Top = 15
+      Width = 115
+      Height = 36
+      BevelOuter = bvNone
+      Color = 2758415
+      ParentBackground = False
+      Cursor = crHandPoint
+      Hint = 'Clique para ver as novidades da build e checar atualiza'#231#245'es (F1)'
+      ShowHint = True
       TabOrder = 3
-      OnClick = btnSobreClick
+      OnClick = lblBadgeBuildClick
+      object lblBadgeBuild: TLabel
+        Left = 0
+        Top = 0
+        Width = 115
+        Height = 36
+        Align = alClient
+        Alignment = taCenter
+        Layout = tlCenter
+        Caption = '⚡ Build 1.0.0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 6210850
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Cursor = crHandPoint
+        Hint = 'Clique para ver as novidades da build e checar atualiza'#231#245'es (F1)'
+        ShowHint = True
+        OnClick = lblBadgeBuildClick
+      end
     end
   end
   object pnlCards: TPanel

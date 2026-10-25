@@ -48,7 +48,8 @@ type
     lblStatusRest: TLabel;
     btnConectarBanco: TButton;
     btnConfiguracoes: TButton;
-    btnSobre: TButton;
+    pnlBadgeBuild: TPanel;
+    lblBadgeBuild: TLabel;
     pnlCards: TPanel;
     pnlCardStatus: TPanel;
     lblCardStatusTit: TLabel;
@@ -104,7 +105,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnConectarBancoClick(Sender: TObject);
     procedure btnConfiguracoesClick(Sender: TObject);
-    procedure btnSobreClick(Sender: TObject);
+    procedure lblBadgeBuildClick(Sender: TObject);
     procedure btnIniciarPausarClick(Sender: TObject);
     procedure btnCargaAlteradosClick(Sender: TObject);
     procedure btnCargaTotalClick(Sender: TObject);
@@ -1085,7 +1086,7 @@ begin
     VK_F1:
     begin
       Key := 0;
-      btnSobreClick(Self);
+      lblBadgeBuildClick(Self);
     end;
     VK_F5:
     begin
@@ -1325,7 +1326,7 @@ begin
   end;
 end;
 
-procedure TFrmPrincipal.btnSobreClick(Sender: TObject);
+procedure TFrmPrincipal.lblBadgeBuildClick(Sender: TObject);
 var
   Frm: TFrmSobreNovidades;
 begin
