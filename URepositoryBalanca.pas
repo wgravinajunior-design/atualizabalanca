@@ -81,7 +81,12 @@ end;
 constructor TRepositoryBalanca.Create(AConnection: TFDConnection);
 begin
   inherited Create;
-  FConnection := AConnection;
+  if Assigned(AConnection) then
+    FConnection := AConnection
+  else if Assigned(DMConexao) then
+    FConnection := DMConexao.FDConnection
+  else
+    FConnection := nil;
 end;
 
 procedure TRepositoryBalanca.CarregarBalancas(ALista: TObjectList<TConfigBalanca>);
@@ -193,6 +198,13 @@ begin
 
   AItem.TeclaAcesso := AQry.FieldByName('PRD_BALANCA_TECLA').AsInteger;
   AItem.Setor := AQry.FieldByName('PRD_SETOR').AsInteger;
+  if (AQry.FindField('NOME_SETOR') <> nil) and not AQry.FieldByName('NOME_SETOR').IsNull and (Trim(AQry.FieldByName('NOME_SETOR').AsString) <> '') then
+    AItem.NomeSetor := Trim(AQry.FieldByName('NOME_SETOR').AsString)
+  else if AItem.Setor > 0 then
+    AItem.NomeSetor := Format('Setor %d', [AItem.Setor])
+  else
+    AItem.NomeSetor := 'Sem Setor';
+
   AItem.Ativo := (AQry.FieldByName('PRD_STATUS').AsString = 'A');
   AItem.UltimaAlteracao := AQry.FieldByName('PRD_ULTIMA_ALTERACAO').AsDateTime;
 
@@ -256,6 +268,7 @@ begin
       '  P.PRD_BALANCA_TIPO, ' +
       '  P.PRD_BALANCA_TECLA, ' +
       '  P.PRD_SETOR, ' +
+      '  S.SET_DESCRICAO AS NOME_SETOR, ' +
       '  P.PRD_STATUS, ' +
       '  P.PRD_ULTIMA_ALTERACAO, ' +
       '  P.PRD_INFADPROD, ' +
@@ -273,6 +286,7 @@ begin
       '  N.PRDN_FIBRA, ' +
       '  N.PRDN_SODIO ' +
       'FROM TB_PRODUTO P ' +
+      'LEFT JOIN TB_SETOR S ON (S.SET_ID = P.PRD_SETOR) ' +
       'LEFT JOIN TB_PRODUTO_NUTRICIONAL N ON (N.PRDN_PRODUTO = P.PRD_ID) ' +
       'WHERE P.PRD_BALANCA_CODIGO IS NOT NULL ' +
       '  AND P.PRD_BALANCA_CODIGO > 0 ' +
@@ -319,6 +333,7 @@ begin
       '  P.PRD_BALANCA_TIPO, ' +
       '  P.PRD_BALANCA_TECLA, ' +
       '  P.PRD_SETOR, ' +
+      '  S.SET_DESCRICAO AS NOME_SETOR, ' +
       '  P.PRD_STATUS, ' +
       '  P.PRD_ULTIMA_ALTERACAO, ' +
       '  P.PRD_INFADPROD, ' +
@@ -336,6 +351,7 @@ begin
       '  N.PRDN_FIBRA, ' +
       '  N.PRDN_SODIO ' +
       'FROM TB_PRODUTO P ' +
+      'LEFT JOIN TB_SETOR S ON (S.SET_ID = P.PRD_SETOR) ' +
       'LEFT JOIN TB_PRODUTO_NUTRICIONAL N ON (N.PRDN_PRODUTO = P.PRD_ID) ' +
       'WHERE P.PRD_BALANCA_CODIGO IS NOT NULL ' +
       '  AND P.PRD_BALANCA_CODIGO > 0 ' +
@@ -516,15 +532,92 @@ begin
 end;
 
 procedure TRepositoryBalanca.ObterDepartamentos(ALista: TObjectList<TDepartamento>);
+var
+  Qry: TFDQuery;
+  Conn: TFDConnection;
+  DeptoNome: string;
 begin
   ALista.Clear;
-  ALista.Add(TDepartamento.Create(1, 1, 'Açougue / Carnes Nobres'));
-  ALista.Add(TDepartamento.Create(2, 2, 'Padaria / Confeitaria'));
-  ALista.Add(TDepartamento.Create(3, 3, 'Frios e Laticínios'));
-  ALista.Add(TDepartamento.Create(4, 4, 'Hortifrúti / FLV'));
-  ALista.Add(TDepartamento.Create(5, 5, 'Peixaria / Frutos do Mar'));
-  ALista.Add(TDepartamento.Create(6, 6, 'Rotisseria / Pratos Prontos'));
-  ALista.Add(TDepartamento.Create(7, 7, 'Congelados / Embutidos'));
+
+  Conn := FConnection;
+  if not Assigned(Conn) and Assigned(DMConexao) then
+    Conn := DMConexao.FDConnection;
+
+  { 1. Busca os setores cadastrados diretamente na tabela TB_SETOR do ERP }
+  if Assigned(Conn) and Conn.Connected then
+  begin
+    Qry := TFDQuery.Create(nil);
+    try
+      Qry.Connection := Conn;
+      try
+        Qry.SQL.Text :=
+          'SELECT SET_ID, SET_DESCRICAO ' +
+          'FROM TB_SETOR ' +
+          'ORDER BY SET_ID ASC';
+        Qry.Open;
+
+        while not Qry.Eof do
+        begin
+          DeptoNome := Trim(Qry.FieldByName('SET_DESCRICAO').AsString);
+          if DeptoNome = '' then
+            DeptoNome := Format('Setor %d', [Qry.FieldByName('SET_ID').AsInteger]);
+
+          ALista.Add(TDepartamento.Create(
+            Qry.FieldByName('SET_ID').AsInteger,
+            Qry.FieldByName('SET_ID').AsInteger,
+            DeptoNome
+          ));
+          Qry.Next;
+        end;
+      except
+        { Se houver divergência de tabela no ERP, segue para fallback de setores de produtos }
+      end;
+    finally
+      Qry.Free;
+    end;
+  end;
+
+  { 2. Se a TB_SETOR estiver vazia no banco, busca os setores em uso em TB_PRODUTO }
+  if (ALista.Count = 0) and Assigned(Conn) and Conn.Connected then
+  begin
+    Qry := TFDQuery.Create(nil);
+    try
+      Qry.Connection := Conn;
+      try
+        Qry.SQL.Text :=
+          'SELECT DISTINCT PRD_SETOR ' +
+          'FROM TB_PRODUTO ' +
+          'WHERE PRD_SETOR IS NOT NULL AND PRD_SETOR > 0 ' +
+          'ORDER BY PRD_SETOR ASC';
+        Qry.Open;
+
+        while not Qry.Eof do
+        begin
+          ALista.Add(TDepartamento.Create(
+            Qry.FieldByName('PRD_SETOR').AsInteger,
+            Qry.FieldByName('PRD_SETOR').AsInteger,
+            Format('Setor %d (ERP)', [Qry.FieldByName('PRD_SETOR').AsInteger])
+          ));
+          Qry.Next;
+        end;
+      except
+      end;
+    finally
+      Qry.Free;
+    end;
+  end;
+
+  { 3. Fallback corporativo para exibição caso o banco não possua nenhum setor gravado ainda }
+  if ALista.Count = 0 then
+  begin
+    ALista.Add(TDepartamento.Create(1, 1, 'Setor 1 - Açougue / Carnes'));
+    ALista.Add(TDepartamento.Create(2, 2, 'Setor 2 - Padaria / Confeitaria'));
+    ALista.Add(TDepartamento.Create(3, 3, 'Setor 3 - Frios e Laticínios'));
+    ALista.Add(TDepartamento.Create(4, 4, 'Setor 4 - Hortifrúti / FLV'));
+    ALista.Add(TDepartamento.Create(5, 5, 'Setor 5 - Peixaria / Pescados'));
+    ALista.Add(TDepartamento.Create(6, 6, 'Setor 6 - Rotisseria / Pratos'));
+    ALista.Add(TDepartamento.Create(7, 7, 'Setor 7 - Congelados / Embutidos'));
+  end;
 end;
 
 function TRepositoryBalanca.SalvarProdutoPLU(AProduto: TProdutoPLU): Boolean;
@@ -688,15 +781,13 @@ begin
     begin
       Prod := Produtos[I];
 
-      case Prod.Setor of
-        1: NomeSetorStr := 'Açougue';
-        2: NomeSetorStr := 'Padaria';
-        3: NomeSetorStr := 'Frios e Laticínios';
-        4: NomeSetorStr := 'Hortifrúti';
-        5: NomeSetorStr := 'Peixaria';
-        6: NomeSetorStr := 'Rotisseria';
-      else
-        NomeSetorStr := 'Geral / Mercearia';
+      NomeSetorStr := Trim(Prod.NomeSetor);
+      if NomeSetorStr = '' then
+      begin
+        if Prod.Setor > 0 then
+          NomeSetorStr := Format('Setor %d', [Prod.Setor])
+        else
+          NomeSetorStr := 'Geral / Sem Setor';
       end;
 
       Reg := TRegistroVendaPesagem.Create;

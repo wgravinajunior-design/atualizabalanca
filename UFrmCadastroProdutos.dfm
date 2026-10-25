@@ -146,7 +146,7 @@
     object pnlEsquerdo: TPanel
       Left = 0
       Top = 0
-      Width = 380
+      Width = 405
       Height = 566
       Align = alLeft
       BevelOuter = bvNone
@@ -219,21 +219,25 @@
         Columns = <
           item
             Caption = 'PLU'
-            Width = 55
+            Width = 50
           end
           item
             Caption = 'Descri'#231#227'o'
-            Width = 175
+            Width = 145
+          end
+          item
+            Caption = 'Setor (ERP)'
+            Width = 90
           end
           item
             Alignment = taRightJustify
             Caption = 'Pre'#231'o R$'
-            Width = 75
+            Width = 65
           end
           item
             Alignment = taCenter
             Caption = 'Val.'
-            Width = 45
+            Width = 40
           end>
         GridLines = True
         HideSelection = False

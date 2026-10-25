@@ -96,6 +96,17 @@ var
 
 implementation
 
+type
+  TAgregadoSetor = class
+  public
+    SetorID: Integer;
+    NomeSetor: string;
+    QtdItens: Integer;
+    VolumeKg: Double;
+    Faturamento: Currency;
+    TotalEtiquetas: Integer;
+  end;
+
 {$R *.dfm}
 
 { TFrmRelatoriosGestao }
@@ -435,18 +446,16 @@ end;
 procedure TFrmRelatoriosGestao.GerarRelatorioConsolidadoPorDepartamento;
 var
   Repo: TRepositoryBalanca;
-  I, SetorIdx: Integer;
+  I: Integer;
   Reg: TRegistroVendaPesagem;
   Item: TListItem;
   TotalFaturamento: Currency;
   TotalPeso: Double;
   TotalEtiquetas: Integer;
   TicketMedio: Currency;
-  TotItens: array[1..10] of Integer;
-  TotPesoSetor: array[1..10] of Double;
-  TotFatSetor: array[1..10] of Currency;
-  TotEtiqSetor: array[1..10] of Integer;
-  NomeSetorArr: array[1..10] of string;
+  MapaSetores: TObjectDictionary<Integer, TAgregadoSetor>;
+  Agregado: TAgregadoSetor;
+  Chaves: TArray<Integer>;
 begin
   Repo := TRepositoryBalanca.Create(nil);
   try
@@ -455,76 +464,72 @@ begin
     Repo.Free;
   end;
 
-  for I := 1 to 10 do
-  begin
-    TotItens[I] := 0;
-    TotPesoSetor[I] := 0.0;
-    TotFatSetor[I] := 0.0;
-    TotEtiqSetor[I] := 0;
-  end;
-
-  NomeSetorArr[1] := 'Açougue / Carnes';
-  NomeSetorArr[2] := 'Padaria / Confeitaria';
-  NomeSetorArr[3] := 'Frios e Laticínios';
-  NomeSetorArr[4] := 'Hortifrúti / FLV';
-  NomeSetorArr[5] := 'Peixaria / Pescados';
-  NomeSetorArr[6] := 'Rotisseria / Pratos';
-  NomeSetorArr[7] := 'Congelados / Embutidos';
-  NomeSetorArr[8] := 'Mercearia';
-  NomeSetorArr[9] := 'Diversos';
-  NomeSetorArr[10] := 'Geral';
-
-  TotalFaturamento := 0;
-  TotalPeso := 0;
-  TotalEtiquetas := 0;
-
-  for I := 0 to FListaVendas.Count - 1 do
-  begin
-    Reg := FListaVendas[I];
-    SetorIdx := Reg.Setor;
-    if (SetorIdx < 1) or (SetorIdx > 10) then
-      SetorIdx := 10;
-
-    Inc(TotItens[SetorIdx]);
-    TotPesoSetor[SetorIdx] := TotPesoSetor[SetorIdx] + Reg.PesoKg;
-    TotFatSetor[SetorIdx] := TotFatSetor[SetorIdx] + Reg.ValorTotal;
-    TotEtiqSetor[SetorIdx] := TotEtiqSetor[SetorIdx] + Reg.QtdEtiquetas;
-
-    TotalFaturamento := TotalFaturamento + Reg.ValorTotal;
-    TotalPeso := TotalPeso + Reg.PesoKg;
-    TotalEtiquetas := TotalEtiquetas + Reg.QtdEtiquetas;
-  end;
-
-  AtualizarCardsKPI(TotalFaturamento, TotalPeso, TotalEtiquetas);
-
-  lvRelatorio.Items.BeginUpdate;
+  MapaSetores := TObjectDictionary<Integer, TAgregadoSetor>.Create([doOwnsValues]);
   try
-    lvRelatorio.Items.Clear;
+    TotalFaturamento := 0;
+    TotalPeso := 0;
+    TotalEtiquetas := 0;
 
-    for I := 1 to 7 do
+    for I := 0 to FListaVendas.Count - 1 do
     begin
-      if TotItens[I] > 0 then
-      begin
-        Item := lvRelatorio.Items.Add;
-        Item.Caption := IntToStr(I);
-        Item.SubItems.Add(NomeSetorArr[I]);
-        Item.SubItems.Add(IntToStr(TotItens[I]));
-        Item.SubItems.Add(FormatFloat('#,##0.00 kg', TotPesoSetor[I]));
-        Item.SubItems.Add(FormatFloat('R$ #,##0.00', TotFatSetor[I]));
-        Item.SubItems.Add(IntToStr(TotEtiqSetor[I]));
+      Reg := FListaVendas[I];
 
-        if TotEtiqSetor[I] > 0 then
-          TicketMedio := TotFatSetor[I] / TotEtiqSetor[I]
+      if not MapaSetores.TryGetValue(Reg.Setor, Agregado) then
+      begin
+        Agregado := TAgregadoSetor.Create;
+        Agregado.SetorID := Reg.Setor;
+        Agregado.NomeSetor := Reg.NomeSetor;
+        Agregado.QtdItens := 0;
+        Agregado.VolumeKg := 0.0;
+        Agregado.Faturamento := 0.0;
+        Agregado.TotalEtiquetas := 0;
+        MapaSetores.Add(Reg.Setor, Agregado);
+      end;
+
+      Inc(Agregado.QtdItens);
+      Agregado.VolumeKg := Agregado.VolumeKg + Reg.PesoKg;
+      Agregado.Faturamento := Agregado.Faturamento + Reg.ValorTotal;
+      Agregado.TotalEtiquetas := Agregado.TotalEtiquetas + Reg.QtdEtiquetas;
+
+      TotalFaturamento := TotalFaturamento + Reg.ValorTotal;
+      TotalPeso := TotalPeso + Reg.PesoKg;
+      TotalEtiquetas := TotalEtiquetas + Reg.QtdEtiquetas;
+    end;
+
+    AtualizarCardsKPI(TotalFaturamento, TotalPeso, TotalEtiquetas);
+
+    lvRelatorio.Items.BeginUpdate;
+    try
+      lvRelatorio.Items.Clear;
+
+      Chaves := MapaSetores.Keys.ToArray;
+      TArray.Sort<Integer>(Chaves);
+
+      for I := 0 to Length(Chaves) - 1 do
+      begin
+        Agregado := MapaSetores[Chaves[I]];
+        Item := lvRelatorio.Items.Add;
+        Item.Caption := IntToStr(Agregado.SetorID);
+        Item.SubItems.Add(Agregado.NomeSetor);
+        Item.SubItems.Add(IntToStr(Agregado.QtdItens));
+        Item.SubItems.Add(FormatFloat('#,##0.00 kg', Agregado.VolumeKg));
+        Item.SubItems.Add(FormatFloat('R$ #,##0.00', Agregado.Faturamento));
+        Item.SubItems.Add(IntToStr(Agregado.TotalEtiquetas));
+
+        if Agregado.TotalEtiquetas > 0 then
+          TicketMedio := Agregado.Faturamento / Agregado.TotalEtiquetas
         else
           TicketMedio := 0.0;
 
         Item.SubItems.Add(FormatFloat('R$ #,##0.00', TicketMedio));
       end;
-    end;
 
-    lblStatusRegistros.Caption := Format('%d departamentos com movimentação', [lvRelatorio.Items.Count]);
+      lblStatusRegistros.Caption := Format('%d setores do ERP com movimentação', [lvRelatorio.Items.Count]);
+    finally
+      lvRelatorio.Items.EndUpdate;
+    end;
   finally
-    lvRelatorio.Items.EndUpdate;
+    MapaSetores.Free;
   end;
 end;
 

@@ -107,6 +107,7 @@ type
     FTipoVenda: TTipoVendaPLU;
     FTeclaAcesso: Integer;
     FSetor: Integer;
+    FNomeSetor: string;
     FAtivo: Boolean;
     FUltimaAlteracao: TDateTime;
     FReceita: string;
@@ -127,6 +128,7 @@ type
     property TipoVenda: TTipoVendaPLU read FTipoVenda write FTipoVenda;
     property TeclaAcesso: Integer read FTeclaAcesso write FTeclaAcesso;
     property Setor: Integer read FSetor write FSetor;
+    property NomeSetor: string read FNomeSetor write FNomeSetor;
     property Ativo: Boolean read FAtivo write FAtivo;
     property UltimaAlteracao: TDateTime read FUltimaAlteracao write FUltimaAlteracao;
     property Receita: string read FReceita write FReceita;
@@ -430,6 +432,7 @@ begin
   FTipoVenda := tvPeso;
   FTeclaAcesso := 0;
   FSetor := 0;
+  FNomeSetor := '';
   FAtivo := True;
   FUltimaAlteracao := Now;
   FReceita := '';

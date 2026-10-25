@@ -242,7 +242,7 @@ begin
   cboFiltroDepto.Items.Clear;
   cboDepto.Items.Clear;
 
-  cboFiltroDepto.Items.Add('Todos os Departamentos');
+  cboFiltroDepto.Items.Add('Todos os Setores (ERP)');
 
   Repo := TRepositoryBalanca.Create(nil);
   try
@@ -291,6 +291,7 @@ var
   MatchSetor: Boolean;
   MatchPLU: Boolean;
   TotalVisiveis: Integer;
+  SetorDescricao: string;
 begin
   lvProdutos.Items.BeginUpdate;
   try
@@ -325,6 +326,15 @@ begin
         Item := lvProdutos.Items.Add;
         Item.Caption := IntToStr(Prod.CodigoPLU);
         Item.SubItems.Add(Prod.Descricao);
+
+        if Trim(Prod.NomeSetor) <> '' then
+          SetorDescricao := Prod.NomeSetor
+        else if Prod.Setor > 0 then
+          SetorDescricao := Format('Setor %d', [Prod.Setor])
+        else
+          SetorDescricao := '-';
+
+        Item.SubItems.Add(SetorDescricao);
         Item.SubItems.Add(FormatFloat('R$ #,##0.00', Prod.PrecoVenda));
         Item.SubItems.Add(IntToStr(Prod.ValidadeDias) + ' d');
         Item.Data := Prod;
