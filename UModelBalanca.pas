@@ -12,6 +12,11 @@ uses
   System.Classes,
   System.Generics.Collections;
 
+const
+  VERSAO_SISTEMA = 'v1.0.2';
+  NUMERO_BUILD = '1.0.2';
+  NOME_APLICACAO = 'GoUp Sistemas - AtualizaBalança Enterprise';
+
 type
   { Enumerações Completas de Fabricantes do Mercado Nacional }
   TFabricanteBalanca = (

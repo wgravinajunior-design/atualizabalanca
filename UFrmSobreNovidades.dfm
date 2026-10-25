@@ -84,7 +84,7 @@
         Height = 21
         Align = alBottom
         Alignment = taCenter
-        Caption = 'v1.0.0'
+        Caption = 'v1.0.2'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 6210850
         Font.Height = -16
@@ -121,7 +121,7 @@
       Top = 32
       Width = 430
       Height = 15
-      Caption = 'Sistema rodando na vers'#227'o 1.0.0. Clique para checar novas atualiza'#231#245'es.'
+      Caption = 'Sistema rodando na vers'#227'o 1.0.2. Clique para checar novas atualiza'#231#245'es.'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 2105376
       Font.Height = -12

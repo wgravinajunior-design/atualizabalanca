@@ -21,10 +21,11 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   Vcl.ExtCtrls,
-  Vcl.ComCtrls;
+  Vcl.ComCtrls,
+  UModelBalanca;
 
 const
-  VERSAO_ATUAL = 'v1.0.0';
+  VERSAO_ATUAL = VERSAO_SISTEMA;
   REPO_URL = 'https://github.com/wgravinajunior-design/atualizabalanca';
   API_RELEASES_URL = 'https://api.github.com/repos/wgravinajunior-design/atualizabalanca/releases/latest';
 
@@ -125,6 +126,7 @@ begin
   lvNovidades.Items.BeginUpdate;
   try
     lvNovidades.Items.Clear;
+    AdicionarItemNovidade('🏷️ Editor Visual de Etiquetas (F9)', 'Layout / Impressão', 'Editor WYSIWYG em tempo real com sincronização direta na memória de todas as balanças.');
     AdicionarItemNovidade('🚀 Comunicação Direta Socket TCP/IP', 'Rede / Driver', 'Transmissão direta sem depender de MGV ou Athenas; envio instantâneo.');
     AdicionarItemNovidade('📊 Comparador Visual de Alterações (F7)', 'Auditoria', 'Compara preços e PLUs antes do envio com destaque em cores de subida/descida.');
     AdicionarItemNovidade('🥗 Tabela Nutricional RDC 429 & IN 75', 'Anvisa', 'Exibe valores por 100g e porção, identificando automaticamente as 3 Lupas Frontais.');
@@ -150,7 +152,14 @@ begin
     mmoNovidades.Lines.Add(' Projeto: GoUp Sistemas | Arquitetura Monolítica Modular Delphi 12');
     mmoNovidades.Lines.Add('================================================================================');
     mmoNovidades.Lines.Add('');
-    mmoNovidades.Lines.Add('🚀 1. COMUNICAÇÃO DIRETA VIA REDE (SEM INTERMEDIÁRIOS)');
+    mmoNovidades.Lines.Add('🏷️ 1. EDITOR VISUAL DE ETIQUETAS INTEGRADO COM BALANÇAS (NOVA TECLA F9)');
+    mmoNovidades.Lines.Add('   - Simulador visual em tempo real (WYSIWYG) com prévia do papel térmico.');
+    mmoNovidades.Lines.Add('   - Suporte completo a todos os fabricantes (Toledo, Balmak, Filizola, Urano, Elgin, Ramuza, Systel).');
+    mmoNovidades.Lines.Add('   - 6 formatos padrão de mercado (40x40, 60x30, 60x40, 60x60, 60x70 e 60x80).');
+    mmoNovidades.Lines.Add('   - Configuração dinâmica de cabeçalho, rodapé, código de barras e tabela nutricional.');
+    mmoNovidades.Lines.Add('   - Sincronização direta do formato na memória da balança em 1 clique via rede TCP/IP.');
+    mmoNovidades.Lines.Add('');
+    mmoNovidades.Lines.Add('🚀 2. COMUNICAÇÃO DIRETA VIA REDE (SEM INTERMEDIÁRIOS)');
     mmoNovidades.Lines.Add('   - Eliminação completa de softwares legados de fábrica (Toledo MGV, Balmak Athenas/Dtec).');
     mmoNovidades.Lines.Add('   - Transmissão instantânea via pacotes TCP/IP Socket com controle de timeout e retry.');
     mmoNovidades.Lines.Add('');

@@ -129,7 +129,7 @@
         Align = alClient
         Alignment = taCenter
         Layout = tlCenter
-        Caption = '⚡ Build 1.0.0'
+        Caption = '⚡ Build 1.0.2'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 6210850
         Font.Height = -13

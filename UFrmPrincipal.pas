@@ -180,6 +180,7 @@ begin
   FBalancas := TObjectList<TConfigBalanca>.Create(True);
   FHistoricoLogs := TStringList.Create;
   FTotalItensHoje := 0;
+  lblBadgeBuild.Caption := '⚡ Build ' + NUMERO_BUILD;
 
   ParamMinimizado := False;
   for I := 1 to ParamCount do
