@@ -314,7 +314,9 @@ begin
                     (Pos(TextoFiltro, IntToStr(Prod.CodigoPLU)) > 0) or
                     (Pos(TextoFiltro, Prod.CodigoBarras) > 0);
 
-      MatchSetor := (SetorFiltro = 0) or (Prod.Setor = SetorFiltro);
+      MatchSetor := (SetorFiltro = 0) or 
+                    (Prod.Setor = SetorFiltro) or 
+                    ((SetorFiltro > 10) and (Prod.Setor = (SetorFiltro - 10)));
 
       if chkApenasPLU.Checked then
         MatchPLU := (Prod.CodigoPLU > 0)
@@ -332,7 +334,7 @@ begin
         else if Prod.Setor > 0 then
           SetorDescricao := Format('Setor %d', [Prod.Setor])
         else
-          SetorDescricao := '-';
+          SetorDescricao := 'Geral';
 
         Item.SubItems.Add(SetorDescricao);
         Item.SubItems.Add(FormatFloat('R$ #,##0.00', Prod.PrecoVenda));
@@ -805,6 +807,19 @@ begin
       Exit;
     end;
   end;
+
+  if Assigned(FProdutoSelecionado) and (Trim(FProdutoSelecionado.NomeSetor) <> '') then
+  begin
+    for I := 0 to cboDepto.Items.Count - 1 do
+    begin
+      if Pos(AnsiUpperCase(Trim(FProdutoSelecionado.NomeSetor)), AnsiUpperCase(cboDepto.Items[I])) > 0 then
+      begin
+        cboDepto.ItemIndex := I;
+        Exit;
+      end;
+    end;
+  end;
+
   if cboDepto.Items.Count > 0 then
     cboDepto.ItemIndex := 0;
 end;

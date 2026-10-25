@@ -21,13 +21,14 @@
   object pnlTopo: TPanel
     Left = 0
     Top = 0
-    Width = 960
+    Width = 1080
     Height = 65
     Align = alTop
     BevelOuter = bvNone
     Color = 5384214
     ParentBackground = False
     TabOrder = 0
+    ExplicitWidth = 960
     object lblTitulo: TLabel
       Left = 20
       Top = 10
@@ -113,32 +114,32 @@
       Top = 15
       Width = 135
       Height = 36
+      Cursor = crHandPoint
+      Hint = 'Clique para ver as novidades da build e checar atualiza'#231#245'es (F1)'
       BevelOuter = bvNone
       Color = 2758415
       ParentBackground = False
-      Cursor = crHandPoint
-      Hint = 'Clique para ver as novidades da build e checar atualiza'#231#245'es (F1)'
+      ParentShowHint = False
       ShowHint = True
       TabOrder = 3
       OnClick = lblBadgeBuildClick
       object lblBadgeBuild: TLabel
         Left = 0
         Top = 0
-        Width = 135
-        Height = 36
+        Width = 88
+        Height = 17
+        Cursor = crHandPoint
+        Hint = 'Clique para ver as novidades da build e checar atualiza'#231#245'es (F1)'
         Align = alClient
         Alignment = taCenter
-        Layout = tlCenter
-        Caption = '⚡ Build 1.0.3'
+        Caption = #9889' Build 1.0.3'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 6210850
         Font.Height = -13
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
-        Cursor = crHandPoint
-        Hint = 'Clique para ver as novidades da build e checar atualiza'#231#245'es (F1)'
-        ShowHint = True
+        Layout = tlCenter
         OnClick = lblBadgeBuildClick
       end
     end
@@ -146,13 +147,14 @@
   object pnlCards: TPanel
     Left = 0
     Top = 65
-    Width = 960
+    Width = 1080
     Height = 85
     Align = alTop
     BevelOuter = bvNone
     Color = clWhitesmoke
     ParentBackground = False
     TabOrder = 1
+    ExplicitWidth = 960
     object pnlCardStatus: TPanel
       Left = 15
       Top = 10
@@ -311,7 +313,9 @@
       Top = 9
       Width = 112
       Height = 32
-      Hint = 'Abre o cadastro completo de produtos, departamentos e tabela nutricional RDC 429 (Atalho: F2)'
+      Hint = 
+        'Abre o cadastro completo de produtos, departamentos e tabela nut' +
+        'ricional RDC 429 (Atalho: F2)'
       Caption = 'Produtos (F2)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -411,7 +415,9 @@
       Top = 9
       Width = 115
       Height = 32
-      Hint = 'Emite relat'#243'rios gerenciais de vendas por peso, pre'#231'o, transa'#231#245'es e etiquetas (Atalho: F10)'
+      Hint = 
+        'Emite relat'#243'rios gerenciais de vendas por peso, pre'#231'o, transa'#231#245'e' +
+        's e etiquetas (Atalho: F10)'
       Caption = 'Relat'#243'rios (F10)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -456,21 +462,23 @@
   object pnlCentral: TPanel
     Left = 0
     Top = 200
-    Width = 960
+    Width = 1080
     Height = 450
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitWidth = 960
     object grpBalancas: TGroupBox
       Left = 0
       Top = 0
-      Width = 960
+      Width = 1080
       Height = 220
       Align = alTop
       Caption = 
         ' Balan'#231'as em Monitoramento (Duplo clique ou clique direito para ' +
         'a'#231#245'es r'#225'pidas) '
       TabOrder = 0
+      ExplicitWidth = 960
       object lvBalancas: TListView
         Left = 2
         Top = 17
@@ -528,19 +536,21 @@
     object grpLogs: TGroupBox
       Left = 0
       Top = 220
-      Width = 960
+      Width = 1080
       Height = 230
       Align = alClient
       Caption = ' Registro de Atividades e Transmiss'#245'es em Tempo Real '
       TabOrder = 1
+      ExplicitWidth = 960
       object pnlLogToolbar: TPanel
         Left = 2
         Top = 17
-        Width = 956
+        Width = 1076
         Height = 32
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 956
         object lblLogInfo: TLabel
           Left = 10
           Top = 8
@@ -611,7 +621,7 @@
       object mmoLogs: TMemo
         Left = 2
         Top = 49
-        Width = 956
+        Width = 1076
         Height = 179
         Align = alClient
         Color = 1973790
@@ -624,6 +634,7 @@
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 1
+        ExplicitWidth = 956
       end
     end
   end

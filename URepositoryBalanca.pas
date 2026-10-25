@@ -197,13 +197,17 @@ begin
     AItem.TipoVenda := tvPeso;
 
   AItem.TeclaAcesso := AQry.FieldByName('PRD_BALANCA_TECLA').AsInteger;
-  AItem.Setor := AQry.FieldByName('PRD_SETOR').AsInteger;
+  if AQry.FindField('COD_SETOR') <> nil then
+    AItem.Setor := AQry.FieldByName('COD_SETOR').AsInteger
+  else
+    AItem.Setor := AQry.FieldByName('PRD_SETOR').AsInteger;
+
   if (AQry.FindField('NOME_SETOR') <> nil) and not AQry.FieldByName('NOME_SETOR').IsNull and (Trim(AQry.FieldByName('NOME_SETOR').AsString) <> '') then
     AItem.NomeSetor := Trim(AQry.FieldByName('NOME_SETOR').AsString)
   else if AItem.Setor > 0 then
     AItem.NomeSetor := Format('Setor %d', [AItem.Setor])
   else
-    AItem.NomeSetor := 'Sem Setor';
+    AItem.NomeSetor := 'Geral';
 
   AItem.Ativo := (AQry.FieldByName('PRD_STATUS').AsString = 'A');
   AItem.UltimaAlteracao := AQry.FieldByName('PRD_ULTIMA_ALTERACAO').AsDateTime;
@@ -267,8 +271,13 @@ begin
       '  P.PRD_BALANCA_VALIDADE, ' +
       '  P.PRD_BALANCA_TIPO, ' +
       '  P.PRD_BALANCA_TECLA, ' +
-      '  P.PRD_SETOR, ' +
-      '  S.SET_DESCRICAO AS NOME_SETOR, ' +
+      '  CASE ' +
+      '    WHEN (P.PRD_SETOR IS NOT NULL AND P.PRD_SETOR > 0) THEN P.PRD_SETOR ' +
+      '    WHEN (P.PRD_SUBGRUPO IS NOT NULL AND P.PRD_SUBGRUPO > 0) THEN P.PRD_SUBGRUPO ' +
+      '    WHEN (P.PRD_GRUPO IS NOT NULL AND P.PRD_GRUPO > 0) THEN (P.PRD_GRUPO + 10) ' +
+      '    ELSE 1 ' +
+      '  END AS COD_SETOR, ' +
+      '  COALESCE(S.SET_DESCRICAO, SG.PSGR_DESCRICAO, G.PGRU_DESCRICAO, ''Geral'') AS NOME_SETOR, ' +
       '  P.PRD_STATUS, ' +
       '  P.PRD_ULTIMA_ALTERACAO, ' +
       '  P.PRD_INFADPROD, ' +
@@ -287,11 +296,17 @@ begin
       '  N.PRDN_SODIO ' +
       'FROM TB_PRODUTO P ' +
       'LEFT JOIN TB_SETOR S ON (S.SET_ID = P.PRD_SETOR) ' +
+      'LEFT JOIN TB_PROD_SUB_GRUPO SG ON (SG.PSGR_ID = P.PRD_SUBGRUPO) ' +
+      'LEFT JOIN TB_PROD_GRUPO G ON (G.PGRU_ID = P.PRD_GRUPO) ' +
       'LEFT JOIN TB_PRODUTO_NUTRICIONAL N ON (N.PRDN_PRODUTO = P.PRD_ID) ' +
       'WHERE P.PRD_BALANCA_CODIGO IS NOT NULL ' +
       '  AND P.PRD_BALANCA_CODIGO > 0 ' +
       '  AND P.PRD_ULTIMA_ALTERACAO >= :CORTE ' +
-      '  AND (:SETOR = 0 OR P.PRD_SETOR = :SETOR) ' +
+      '  AND (:SETOR = 0 OR ' +
+      '       (P.PRD_SETOR = :SETOR) OR ' +
+      '       (P.PRD_SUBGRUPO = :SETOR) OR ' +
+      '       (P.PRD_GRUPO = :SETOR) OR ' +
+      '       ((P.PRD_GRUPO + 10) = :SETOR)) ' +
       'ORDER BY P.PRD_BALANCA_CODIGO ASC';
     Qry.ParamByName('CORTE').AsDateTime := ADataCorte;
     Qry.ParamByName('SETOR').AsInteger := ASetor;
@@ -332,8 +347,13 @@ begin
       '  P.PRD_BALANCA_VALIDADE, ' +
       '  P.PRD_BALANCA_TIPO, ' +
       '  P.PRD_BALANCA_TECLA, ' +
-      '  P.PRD_SETOR, ' +
-      '  S.SET_DESCRICAO AS NOME_SETOR, ' +
+      '  CASE ' +
+      '    WHEN (P.PRD_SETOR IS NOT NULL AND P.PRD_SETOR > 0) THEN P.PRD_SETOR ' +
+      '    WHEN (P.PRD_SUBGRUPO IS NOT NULL AND P.PRD_SUBGRUPO > 0) THEN P.PRD_SUBGRUPO ' +
+      '    WHEN (P.PRD_GRUPO IS NOT NULL AND P.PRD_GRUPO > 0) THEN (P.PRD_GRUPO + 10) ' +
+      '    ELSE 1 ' +
+      '  END AS COD_SETOR, ' +
+      '  COALESCE(S.SET_DESCRICAO, SG.PSGR_DESCRICAO, G.PGRU_DESCRICAO, ''Geral'') AS NOME_SETOR, ' +
       '  P.PRD_STATUS, ' +
       '  P.PRD_ULTIMA_ALTERACAO, ' +
       '  P.PRD_INFADPROD, ' +
@@ -352,10 +372,16 @@ begin
       '  N.PRDN_SODIO ' +
       'FROM TB_PRODUTO P ' +
       'LEFT JOIN TB_SETOR S ON (S.SET_ID = P.PRD_SETOR) ' +
+      'LEFT JOIN TB_PROD_SUB_GRUPO SG ON (SG.PSGR_ID = P.PRD_SUBGRUPO) ' +
+      'LEFT JOIN TB_PROD_GRUPO G ON (G.PGRU_ID = P.PRD_GRUPO) ' +
       'LEFT JOIN TB_PRODUTO_NUTRICIONAL N ON (N.PRDN_PRODUTO = P.PRD_ID) ' +
       'WHERE P.PRD_BALANCA_CODIGO IS NOT NULL ' +
       '  AND P.PRD_BALANCA_CODIGO > 0 ' +
-      '  AND (:SETOR = 0 OR P.PRD_SETOR = :SETOR) ' +
+      '  AND (:SETOR = 0 OR ' +
+      '       (P.PRD_SETOR = :SETOR) OR ' +
+      '       (P.PRD_SUBGRUPO = :SETOR) OR ' +
+      '       (P.PRD_GRUPO = :SETOR) OR ' +
+      '       ((P.PRD_GRUPO + 10) = :SETOR)) ' +
       'ORDER BY P.PRD_BALANCA_CODIGO ASC';
     Qry.ParamByName('SETOR').AsInteger := ASetor;
     Qry.Open;
@@ -536,6 +562,7 @@ var
   Qry: TFDQuery;
   Conn: TFDConnection;
   DeptoNome: string;
+  CodDepto: Integer;
 begin
   ALista.Clear;
 
@@ -543,19 +570,16 @@ begin
   if not Assigned(Conn) and Assigned(DMConexao) then
     Conn := DMConexao.FDConnection;
 
-  { 1. Busca os setores cadastrados diretamente na tabela TB_SETOR do ERP }
   if Assigned(Conn) and Conn.Connected then
   begin
     Qry := TFDQuery.Create(nil);
     try
       Qry.Connection := Conn;
-      try
-        Qry.SQL.Text :=
-          'SELECT SET_ID, SET_DESCRICAO ' +
-          'FROM TB_SETOR ' +
-          'ORDER BY SET_ID ASC';
-        Qry.Open;
 
+      { 1. Se a tabela TB_SETOR existir e possuir registros, carrega os setores físicos }
+      try
+        Qry.SQL.Text := 'SELECT SET_ID, SET_DESCRICAO FROM TB_SETOR ORDER BY SET_ID ASC';
+        Qry.Open;
         while not Qry.Eof do
         begin
           DeptoNome := Trim(Qry.FieldByName('SET_DESCRICAO').AsString);
@@ -569,37 +593,44 @@ begin
           ));
           Qry.Next;
         end;
+        Qry.Close;
       except
-        { Se houver divergência de tabela no ERP, segue para fallback de setores de produtos }
+        { Ignora se a tabela não existir no ERP }
       end;
-    finally
-      Qry.Free;
-    end;
-  end;
 
-  { 2. Se a TB_SETOR estiver vazia no banco, busca os setores em uso em TB_PRODUTO }
-  if (ALista.Count = 0) and Assigned(Conn) and Conn.Connected then
-  begin
-    Qry := TFDQuery.Create(nil);
-    try
-      Qry.Connection := Conn;
+      { 2. Busca os Subgrupos de produtos do ERP (ex: FRUTAS, LEGUMES, VERDURAS, EMPACOTADOS) }
       try
-        Qry.SQL.Text :=
-          'SELECT DISTINCT PRD_SETOR ' +
-          'FROM TB_PRODUTO ' +
-          'WHERE PRD_SETOR IS NOT NULL AND PRD_SETOR > 0 ' +
-          'ORDER BY PRD_SETOR ASC';
+        Qry.SQL.Text := 'SELECT PSGR_ID, PSGR_DESCRICAO, PSGR_GRUPO FROM TB_PROD_SUB_GRUPO ORDER BY PSGR_DESCRICAO ASC';
         Qry.Open;
-
         while not Qry.Eof do
         begin
-          ALista.Add(TDepartamento.Create(
-            Qry.FieldByName('PRD_SETOR').AsInteger,
-            Qry.FieldByName('PRD_SETOR').AsInteger,
-            Format('Setor %d (ERP)', [Qry.FieldByName('PRD_SETOR').AsInteger])
-          ));
+          DeptoNome := Trim(Qry.FieldByName('PSGR_DESCRICAO').AsString);
+          if DeptoNome <> '' then
+          begin
+            CodDepto := Qry.FieldByName('PSGR_ID').AsInteger;
+            ALista.Add(TDepartamento.Create(CodDepto, CodDepto, DeptoNome));
+          end;
           Qry.Next;
         end;
+        Qry.Close;
+      except
+      end;
+
+      { 3. Busca os Grupos de produtos do ERP (ex: HORTIFRUTI, GERAL, PROMOCAO) }
+      try
+        Qry.SQL.Text := 'SELECT PGRU_ID, PGRU_DESCRICAO FROM TB_PROD_GRUPO ORDER BY PGRU_DESCRICAO ASC';
+        Qry.Open;
+        while not Qry.Eof do
+        begin
+          DeptoNome := Trim(Qry.FieldByName('PGRU_DESCRICAO').AsString);
+          if DeptoNome <> '' then
+          begin
+            CodDepto := Qry.FieldByName('PGRU_ID').AsInteger + 10;
+            ALista.Add(TDepartamento.Create(CodDepto, CodDepto, DeptoNome));
+          end;
+          Qry.Next;
+        end;
+        Qry.Close;
       except
       end;
     finally
@@ -607,16 +638,10 @@ begin
     end;
   end;
 
-  { 3. Fallback corporativo para exibição caso o banco não possua nenhum setor gravado ainda }
+  { 4. Fallback seguro caso não haja conexão com o banco ou tabelas vazias }
   if ALista.Count = 0 then
   begin
-    ALista.Add(TDepartamento.Create(1, 1, 'Setor 1 - Açougue / Carnes'));
-    ALista.Add(TDepartamento.Create(2, 2, 'Setor 2 - Padaria / Confeitaria'));
-    ALista.Add(TDepartamento.Create(3, 3, 'Setor 3 - Frios e Laticínios'));
-    ALista.Add(TDepartamento.Create(4, 4, 'Setor 4 - Hortifrúti / FLV'));
-    ALista.Add(TDepartamento.Create(5, 5, 'Setor 5 - Peixaria / Pescados'));
-    ALista.Add(TDepartamento.Create(6, 6, 'Setor 6 - Rotisseria / Pratos'));
-    ALista.Add(TDepartamento.Create(7, 7, 'Setor 7 - Congelados / Embutidos'));
+    ALista.Add(TDepartamento.Create(1, 1, 'Geral'));
   end;
 end;
 
@@ -653,6 +678,8 @@ begin
           '  PRD_BALANCA_TIPO = :TIPO, ' +
           '  PRD_BALANCA_TECLA = :TECLA, ' +
           '  PRD_SETOR = :SETOR, ' +
+          '  PRD_SUBGRUPO = :SUBGRUPO, ' +
+          '  PRD_GRUPO = :GRUPO, ' +
           '  PRD_STATUS = :STATUS, ' +
           '  PRD_ULTIMA_ALTERACAO = CURRENT_TIMESTAMP, ' +
           '  PRD_INFADPROD = :RECEITA, ' +
@@ -666,11 +693,11 @@ begin
           'INSERT INTO TB_PRODUTO ( ' +
           '  PRD_BALANCA_CODIGO, PRD_CODIGO, PRD_DESCRICAO, PRD_DESCRICAO_CURTA, ' +
           '  PRD_PRECO_VENDA, PRD_BALANCA_VALIDADE, PRD_BALANCA_TIPO, PRD_BALANCA_TECLA, ' +
-          '  PRD_SETOR, PRD_STATUS, PRD_ULTIMA_ALTERACAO, PRD_INFADPROD, PRD_OBS_RESUMIDA ' +
+          '  PRD_SETOR, PRD_SUBGRUPO, PRD_GRUPO, PRD_STATUS, PRD_ULTIMA_ALTERACAO, PRD_INFADPROD, PRD_OBS_RESUMIDA ' +
           ') VALUES ( ' +
           '  :PLU, :CODIGO, :DESC, :DESCCURTA, ' +
           '  :PRECO, :VAL, :TIPO, :TECLA, ' +
-          '  :SETOR, :STATUS, CURRENT_TIMESTAMP, :RECEITA, :ALERG ' +
+          '  :SETOR, :SUBGRUPO, :GRUPO, :STATUS, CURRENT_TIMESTAMP, :RECEITA, :ALERG ' +
           ')';
       end;
 
@@ -683,6 +710,18 @@ begin
       Qry.ParamByName('TIPO').AsInteger := Ord(AProduto.TipoVenda);
       Qry.ParamByName('TECLA').AsInteger := AProduto.TeclaAcesso;
       Qry.ParamByName('SETOR').AsInteger := AProduto.Setor;
+
+      if AProduto.Setor <= 10 then
+      begin
+        Qry.ParamByName('SUBGRUPO').AsInteger := AProduto.Setor;
+        Qry.ParamByName('GRUPO').AsInteger := 3; { Grupo 3: Hortifrúti padrão do ERP }
+      end
+      else
+      begin
+        Qry.ParamByName('SUBGRUPO').Clear;
+        Qry.ParamByName('GRUPO').AsInteger := AProduto.Setor - 10;
+      end;
+
       if AProduto.Ativo then
         Qry.ParamByName('STATUS').AsString := 'A'
       else

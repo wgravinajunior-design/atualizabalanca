@@ -644,7 +644,12 @@ begin
         Item.Caption := IntToStr(Prod.CodigoPLU);
         Item.SubItems.Add(Prod.Descricao);
         Item.SubItems.Add(FormatFloat('R$ #,##0.00', Prod.PrecoVenda));
-        Item.SubItems.Add(Format('Setor %d', [Prod.Setor]));
+        if Trim(Prod.NomeSetor) <> '' then
+          Item.SubItems.Add(Prod.NomeSetor)
+        else if Prod.Setor > 0 then
+          Item.SubItems.Add(Format('Setor %d', [Prod.Setor]))
+        else
+          Item.SubItems.Add('Geral');
         if Prod.Ativo then
           Item.SubItems.Add('Ativo')
         else
