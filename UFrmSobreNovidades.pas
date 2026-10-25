@@ -47,13 +47,11 @@ type
     tsNotasDetalhadas: TTabSheet;
     mmoNovidades: TMemo;
     pnlRodape: TPanel;
-    btnVerRepositorio: TButton;
     btnFechar: TButton;
 
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnFecharClick(Sender: TObject);
-    procedure btnVerRepositorioClick(Sender: TObject);
     procedure btnVerificarAtualizacaoClick(Sender: TObject);
     procedure btnBaixarAtualizacaoClick(Sender: TObject);
   private
@@ -78,7 +76,7 @@ uses
 procedure TFrmSobreNovidades.FormShow(Sender: TObject);
 begin
   lblVersaoVal.Caption := VERSAO_ATUAL;
-  lblUpdateStatusMsg.Caption := Format('Sistema rodando na versão %s. Clique em "Verificar no GitHub" para checar novas builds.', [VERSAO_ATUAL]);
+  lblUpdateStatusMsg.Caption := Format('Sistema rodando na versão %s. Clique em "Verificar Versão" para checar atualizações.', [VERSAO_ATUAL]);
   btnBaixarAtualizacao.Visible := False;
   FDownloadUrlNovaVersao := '';
 
@@ -98,11 +96,6 @@ end;
 procedure TFrmSobreNovidades.btnFecharClick(Sender: TObject);
 begin
   Close;
-end;
-
-procedure TFrmSobreNovidades.btnVerRepositorioClick(Sender: TObject);
-begin
-  ShellExecute(0, 'open', PChar(REPO_URL), nil, nil, SW_SHOWNORMAL);
 end;
 
 procedure TFrmSobreNovidades.btnBaixarAtualizacaoClick(Sender: TObject);

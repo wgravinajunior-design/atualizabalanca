@@ -34,6 +34,7 @@ type
     function TestarConectividade: Boolean;
     function EnviarProdutos(AProdutos: TObjectList<TProdutoPLU>): TResultadoEnvio;
     function LimparBalanca: TResultadoEnvio;
+    function ConfigurarLayoutEtiqueta(AConfig: TConfigEtiqueta): TResultadoEnvio;
     function ObterNomeDriver: string;
     procedure GerarArquivoCargaPlatina(AProdutos: TObjectList<TProdutoPLU>; const ACaminhoArquivo: string);
   end;
@@ -299,6 +300,53 @@ begin
     begin
       Result.Sucesso := False;
       Result.Mensagem := 'Falha ao zerar memória da Filizola: ' + E.Message;
+    end;
+  end;
+
+  StopWatch.Stop;
+  Result.TempoMs := StopWatch.ElapsedMilliseconds;
+end;
+
+function TProtocoloFilizola.ConfigurarLayoutEtiqueta(AConfig: TConfigEtiqueta): TResultadoEnvio;
+var
+  StopWatch: TStopwatch;
+  PacoteConfig: TIdBytes;
+  StrCmd: AnsiString;
+begin
+  Result.Sucesso := False;
+  Result.QuantidadeItens := 1;
+  Result.DataHora := Now;
+  Result.TempoMs := 0;
+  Result.Mensagem := '';
+
+  StopWatch := TStopwatch.StartNew;
+  try
+    if not Conectar then
+    begin
+      Result.Sucesso := False;
+      Result.Mensagem := Format('Não foi possível conectar na Filizola (%s:%d) para configurar layout.', [FBalanca.IP, FBalanca.Porta]);
+      Exit;
+    end;
+
+    try
+      StrCmd := AnsiString(Format('%sFMT%.2d%-28.28s%s', [Chr($02), AConfig.FormatoID, AConfig.NomeLoja, Chr($03)]));
+      SetLength(PacoteConfig, Length(StrCmd));
+      Move(StrCmd[1], PacoteConfig[0], Length(StrCmd));
+
+      FTCPClient.Socket.Write(PacoteConfig);
+      Sleep(100);
+
+      Result.Sucesso := True;
+      Result.Mensagem := Format('Layout de etiqueta (%s - Formato %d) gravado com sucesso na Filizola (%s).',
+        [AConfig.TamanhoDescricao, AConfig.FormatoID, FBalanca.IP]);
+    finally
+      Desconectar;
+    end;
+  except
+    on E: Exception do
+    begin
+      Result.Sucesso := False;
+      Result.Mensagem := 'Falha ao sincronizar layout de etiqueta na Filizola: ' + E.Message;
     end;
   end;
 

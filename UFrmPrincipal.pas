@@ -36,7 +36,8 @@ uses
   UFrmConfig,
   UFrmComparador,
   UFrmNutricional,
-  UFrmSobreNovidades;
+  UFrmSobreNovidades,
+  UFrmEditorEtiquetas;
 
 type
   TFrmPrincipal = class(TForm)
@@ -67,6 +68,7 @@ type
     btnCargaAlterados: TButton;
     btnCompararAlteracoes: TButton;
     btnCargaTotal: TButton;
+    btnEditorEtiquetas: TButton;
     btnIniciarPausar: TButton;
     btnTestarConexoes: TButton;
     btnValidarPLUs: TButton;
@@ -94,6 +96,7 @@ type
     mnCargaBalancaIndividual: TMenuItem;
     mnLimparMemoriaBalanca: TMenuItem;
     mnVerTabelaNutricional: TMenuItem;
+    mnEditorEtiquetaBalanca: TMenuItem;
     mnSepBalanca: TMenuItem;
     mnPropriedadesBalanca: TMenuItem;
     SaveDialogCSV: TSaveDialog;
@@ -119,8 +122,10 @@ type
     procedure mnCargaBalancaIndividualClick(Sender: TObject);
     procedure mnLimparMemoriaBalancaClick(Sender: TObject);
     procedure mnVerTabelaNutricionalClick(Sender: TObject);
+    procedure mnEditorEtiquetaBalancaClick(Sender: TObject);
     procedure mnPropriedadesBalancaClick(Sender: TObject);
     procedure btnCompararAlteracoesClick(Sender: TObject);
+    procedure btnEditorEtiquetasClick(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
     procedure mnAbrirClick(Sender: TObject);
     procedure mnSairClick(Sender: TObject);
@@ -1108,6 +1113,11 @@ begin
       Key := 0;
       btnTestarConexoesClick(Self);
     end;
+    VK_F9:
+    begin
+      Key := 0;
+      btnEditorEtiquetasClick(Self);
+    end;
     VK_F12:
     begin
       Key := 0;
@@ -1407,6 +1417,36 @@ begin
       ProdExibicao.Free
     else if Assigned(ListaProdutos) then
       ListaProdutos.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.btnEditorEtiquetasClick(Sender: TObject);
+var
+  Frm: TFrmEditorEtiquetas;
+begin
+  Frm := TFrmEditorEtiquetas.Create(Self);
+  try
+    Frm.ShowModal;
+  finally
+    Frm.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.mnEditorEtiquetaBalancaClick(Sender: TObject);
+var
+  Frm: TFrmEditorEtiquetas;
+  Bal: TConfigBalanca;
+begin
+  Frm := TFrmEditorEtiquetas.Create(Self);
+  try
+    if (lvBalancas.Selected <> nil) and Assigned(lvBalancas.Selected.Data) then
+    begin
+      Bal := TConfigBalanca(lvBalancas.Selected.Data);
+      Frm.SelecionarBalancaPorID(Bal.ID);
+    end;
+    Frm.ShowModal;
+  finally
+    Frm.Free;
   end;
 end;
 

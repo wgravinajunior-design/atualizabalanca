@@ -14,6 +14,7 @@ uses
   UFrmComparador in 'UFrmComparador.pas' {FrmComparador},
   UFrmNutricional in 'UFrmNutricional.pas' {FrmNutricional},
   UFrmSobreNovidades in 'UFrmSobreNovidades.pas' {FrmSobreNovidades},
+  UFrmEditorEtiquetas in 'UFrmEditorEtiquetas.pas' {FrmEditorEtiquetas},
   UModelBalanca in 'UModelBalanca.pas',
   USchemaBalanca in 'USchemaBalanca.pas',
   URepositoryBalanca in 'URepositoryBalanca.pas',

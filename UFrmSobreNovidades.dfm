@@ -45,7 +45,7 @@
       Top = 40
       Width = 368
       Height = 15
-      Caption = 'Central de Novidades da Build & Sistema de Atualiza'#231#227'o Autom'#225'tica'
+      Caption = 'Central de Novidades da Build e Atualiza'#231#227'o Autom'#225'tica'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGainsboro
       Font.Height = -12
@@ -119,9 +119,9 @@
     object lblUpdateStatusMsg: TLabel
       Left = 15
       Top = 32
-      Width = 410
+      Width = 430
       Height = 15
-      Caption = 'Sistema rodando na vers'#227'o 1.0.0. Clique para checar atualiza'#231#245'es no GitHub.'
+      Caption = 'Sistema rodando na vers'#227'o 1.0.0. Clique para checar novas atualiza'#231#245'es.'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 2105376
       Font.Height = -12
@@ -130,11 +130,11 @@
       ParentFont = False
     end
     object btnVerificarAtualizacao: TButton
-      Left = 440
+      Left = 455
       Top = 18
-      Width = 140
+      Width = 125
       Height = 34
-      Caption = 'Verificar no GitHub'
+      Caption = 'Verificar Vers'#227'o'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12
@@ -226,22 +226,13 @@
     Color = 15921906
     ParentBackground = False
     TabOrder = 3
-    object btnVerRepositorio: TButton
-      Left = 15
-      Top = 10
-      Width = 200
-      Height = 35
-      Caption = 'Ver Reposit'#243'rio no GitHub'
-      TabOrder = 0
-      OnClick = btnVerRepositorioClick
-    end
     object btnFechar: TButton
       Left = 645
       Top = 10
       Width = 100
       Height = 35
       Caption = 'Fechar'
-      TabOrder = 1
+      TabOrder = 0
       OnClick = btnFecharClick
     end
   end

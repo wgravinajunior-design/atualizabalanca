@@ -166,6 +166,53 @@ type
     function ObterDescricaoModelo: string;
   end;
 
+  { Configuração e Layout de Impressão de Etiquetas para Balanças }
+  TConfigEtiqueta = class
+  private
+    FFormatoID: Integer;
+    FTamanhoDescricao: string;
+    FNomeLoja: string;
+    FMensagemRodape: string;
+    FImprimirLoja: Boolean;
+    FImprimirPLU: Boolean;
+    FImprimirDescricao: Boolean;
+    FImprimirDataEmbalagem: Boolean;
+    FImprimirDataValidade: Boolean;
+    FImprimirHora: Boolean;
+    FImprimirTara: Boolean;
+    FImprimirPrecoUnitario: Boolean;
+    FImprimirPeso: Boolean;
+    FImprimirTotal: Boolean;
+    FImprimirCodigoBarras: Boolean;
+    FImprimirNutricional: Boolean;
+    FImprimirReceitaAlergicos: Boolean;
+    FImprimirRodape: Boolean;
+    FTipoCodigoBarras: Integer;
+  public
+    constructor Create;
+    procedure CarregarPadrao;
+
+    property FormatoID: Integer read FFormatoID write FFormatoID;
+    property TamanhoDescricao: string read FTamanhoDescricao write FTamanhoDescricao;
+    property NomeLoja: string read FNomeLoja write FNomeLoja;
+    property MensagemRodape: string read FMensagemRodape write FMensagemRodape;
+    property ImprimirLoja: Boolean read FImprimirLoja write FImprimirLoja;
+    property ImprimirPLU: Boolean read FImprimirPLU write FImprimirPLU;
+    property ImprimirDescricao: Boolean read FImprimirDescricao write FImprimirDescricao;
+    property ImprimirDataEmbalagem: Boolean read FImprimirDataEmbalagem write FImprimirDataEmbalagem;
+    property ImprimirDataValidade: Boolean read FImprimirDataValidade write FImprimirDataValidade;
+    property ImprimirHora: Boolean read FImprimirHora write FImprimirHora;
+    property ImprimirTara: Boolean read FImprimirTara write FImprimirTara;
+    property ImprimirPrecoUnitario: Boolean read FImprimirPrecoUnitario write FImprimirPrecoUnitario;
+    property ImprimirPeso: Boolean read FImprimirPeso write FImprimirPeso;
+    property ImprimirTotal: Boolean read FImprimirTotal write FImprimirTotal;
+    property ImprimirCodigoBarras: Boolean read FImprimirCodigoBarras write FImprimirCodigoBarras;
+    property ImprimirNutricional: Boolean read FImprimirNutricional write FImprimirNutricional;
+    property ImprimirReceitaAlergicos: Boolean read FImprimirReceitaAlergicos write FImprimirReceitaAlergicos;
+    property ImprimirRodape: Boolean read FImprimirRodape write FImprimirRodape;
+    property TipoCodigoBarras: Integer read FTipoCodigoBarras write FTipoCodigoBarras;
+  end;
+
   { Registro de Retorno da Operação de Envio }
   TResultadoEnvio = record
     Sucesso: Boolean;
@@ -376,6 +423,37 @@ end;
 function TConfigBalanca.ObterDescricaoModelo: string;
 begin
   Result := ModeloToString(FModelo);
+end;
+
+{ TConfigEtiqueta }
+
+constructor TConfigEtiqueta.Create;
+begin
+  inherited Create;
+  CarregarPadrao;
+end;
+
+procedure TConfigEtiqueta.CarregarPadrao;
+begin
+  FFormatoID := 3;
+  FTamanhoDescricao := '60 x 40 mm (Padrão de Mercado)';
+  FNomeLoja := 'GOUP SUPERMERCADOS';
+  FMensagemRodape := 'Conserve em local fresco. Obrigado pela preferência!';
+  FImprimirLoja := True;
+  FImprimirPLU := True;
+  FImprimirDescricao := True;
+  FImprimirDataEmbalagem := True;
+  FImprimirDataValidade := True;
+  FImprimirHora := True;
+  FImprimirTara := True;
+  FImprimirPrecoUnitario := True;
+  FImprimirPeso := True;
+  FImprimirTotal := True;
+  FImprimirCodigoBarras := True;
+  FImprimirNutricional := True;
+  FImprimirReceitaAlergicos := True;
+  FImprimirRodape := True;
+  FTipoCodigoBarras := 0;
 end;
 
 end.

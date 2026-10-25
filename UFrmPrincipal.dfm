@@ -307,9 +307,9 @@
     BevelOuter = bvNone
     TabOrder = 2
     object btnCargaAlterados: TButton
-      Left = 15
+      Left = 10
       Top = 9
-      Width = 150
+      Width = 125
       Height = 32
       Hint = 
         'Envia imediatamente os produtos que tiveram pre'#231'o ou dados alter' +
@@ -327,9 +327,9 @@
       OnClick = btnCargaAlteradosClick
     end
     object btnCompararAlteracoes: TButton
-      Left = 172
+      Left = 140
       Top = 9
-      Width = 155
+      Width = 130
       Height = 32
       Hint = 
         'Exibe o comparativo de pre'#231'os anteriores x atuais e produtos pen' +
@@ -347,9 +347,9 @@
       OnClick = btnCompararAlteracoesClick
     end
     object btnCargaTotal: TButton
-      Left = 335
+      Left = 275
       Top = 9
-      Width = 145
+      Width = 115
       Height = 32
       Hint = 
         'Transmite o cadastro completo de produtos para todas as balan'#231'as' +
@@ -360,24 +360,30 @@
       TabOrder = 2
       OnClick = btnCargaTotalClick
     end
-    object btnIniciarPausar: TButton
-      Left = 488
+    object btnEditorEtiquetas: TButton
+      Left = 395
       Top = 9
-      Width = 155
+      Width = 135
       Height = 32
       Hint = 
-        'Pausa ou retoma o ciclo autom'#225'tico de sincroniza'#231#227'o em segundo p' +
-        'lano'
-      Caption = 'Pausar Monitoramento'
+        'Abre o editor visual de etiquetas para personalizar e enviar lay' +
+        'out para as balan'#231'as (Atalho: F9)'
+      Caption = 'Etiquetas (F9)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
-      OnClick = btnIniciarPausarClick
+      OnClick = btnEditorEtiquetasClick
     end
     object btnTestarConexoes: TButton
-      Left = 650
+      Left = 535
       Top = 9
-      Width = 140
+      Width = 125
       Height = 32
       Hint = 
         'Verifica a comunica'#231#227'o de rede com cada uma das balan'#231'as cadastr' +
@@ -388,10 +394,24 @@
       TabOrder = 4
       OnClick = btnTestarConexoesClick
     end
-    object btnValidarPLUs: TButton
-      Left = 798
+    object btnIniciarPausar: TButton
+      Left = 665
       Top = 9
-      Width = 148
+      Width = 145
+      Height = 32
+      Hint = 
+        'Pausa ou retoma o ciclo autom'#225'tico de sincroniza'#231#227'o em segundo p' +
+        'lano'
+      Caption = 'Pausar Monitoramento'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+      OnClick = btnIniciarPausarClick
+    end
+    object btnValidarPLUs: TButton
+      Left = 815
+      Top = 9
+      Width = 130
       Height = 32
       Hint = 
         'Executa diagn'#243'stico de integridade dos c'#243'digos, pre'#231'os e validad' +
@@ -399,7 +419,7 @@
       Caption = 'Diagn'#243'stico de PLUs'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 5
+      TabOrder = 6
       OnClick = btnValidarPLUsClick
     end
   end
@@ -633,6 +653,10 @@
     object mnVerTabelaNutricional: TMenuItem
       Caption = 'Ver Tabela Nutricional (RDC 429)...'
       OnClick = mnVerTabelaNutricionalClick
+    end
+    object mnEditorEtiquetaBalanca: TMenuItem
+      Caption = 'Editar Layout de Etiqueta (F9)...'
+      OnClick = mnEditorEtiquetaBalancaClick
     end
     object mnSepBalanca: TMenuItem
       Caption = '-'

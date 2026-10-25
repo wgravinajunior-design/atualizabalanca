@@ -22,6 +22,7 @@ type
     function TestarConectividade: Boolean;
     function EnviarProdutos(AProdutos: TObjectList<TProdutoPLU>): TResultadoEnvio;
     function LimparBalanca: TResultadoEnvio;
+    function ConfigurarLayoutEtiqueta(AConfig: TConfigEtiqueta): TResultadoEnvio;
     function ObterNomeDriver: string;
   end;
 
